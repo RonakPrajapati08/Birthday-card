@@ -335,6 +335,39 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
+        /* Music player controls */
+        .music-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .music-btn {
+            background: none;
+            border: none;
+            color: #b21f1f;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .music-btn:hover {
+            background: rgba(178, 31, 31, 0.1);
+        }
+
         @keyframes flicker {
 
             0%,
@@ -505,7 +538,7 @@
                             <div style="flex: 1; text-align: right;">
                                 <img src="./Nisha.png"
                                     style="width: 100%; max-width: 200px; border-radius: 10%; object-fit: cover;"
-                                    alt="Happy Birthday Image"  />
+                                    alt="Happy Birthday Image" />
                             </div>
                         </div>
                     </div>
@@ -513,6 +546,22 @@
             </div>
         </div>
         <button class="open-btn">Open Card</button>
+    </div>
+
+    <!-- Audio element for birthday music -->
+    <audio id="birthdayMusic" loop>
+        <source src="./soulmate_ringtone.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Music controls -->
+    <div class="music-controls" style="display: none;">
+        <button class="music-btn" id="playPauseBtn">
+            <i class="fas fa-play"></i>
+        </button>
+        <button class="music-btn" id="stopBtn">
+            <i class="fas fa-stop"></i>
+        </button>
     </div>
 
     <script>
@@ -673,6 +722,33 @@
             createStars();
             decorateCake();
 
+            // Get audio elements
+            const birthdayMusic = document.getElementById('birthdayMusic');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const musicControls = document.querySelector('.music-controls');
+
+            // Music control functions
+            function togglePlayPause() {
+                if (birthdayMusic.paused) {
+                    birthdayMusic.play();
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                } else {
+                    birthdayMusic.pause();
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                }
+            }
+
+            function stopMusic() {
+                birthdayMusic.pause();
+                birthdayMusic.currentTime = 0;
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+
+            // Add event listeners for music controls
+            playPauseBtn.addEventListener('click', togglePlayPause);
+            stopBtn.addEventListener('click', stopMusic);
+
             // Open card on button click
             const card = document.querySelector('.card');
             const openBtn = document.querySelector('.open-btn');
@@ -683,8 +759,17 @@
                     openBtn.textContent = 'Close Card';
                     // Launch fireworks when card opens
                     createFireworks();
+                    // Show music controls
+                    musicControls.style.display = 'flex';
+                    // Play birthday music
+                    birthdayMusic.play();
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
                 } else {
                     openBtn.textContent = 'Open Card';
+                    // Hide music controls when card is closed
+                    musicControls.style.display = 'none';
+                    // Pause music when card is closed
+                    birthdayMusic.pause();
                 }
             });
 
